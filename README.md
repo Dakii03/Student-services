@@ -36,26 +36,6 @@ This project was developed as a university assignment using **Vue 3**, **Express
 
 ---
 
-## Project Structure
-
-project_1/
-│
-├── backend/
-│ ├── routes/
-│ ├── db.js
-│ └── server.js
-│
-├── frontend/
-│ ├── components/
-│ ├── api/
-│ ├── store/
-│ ├── App.vue
-│ └── main.js
-│
-└── README.md
-
----
-
 ## Installation and Setup
 
 ### Backend
