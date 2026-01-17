@@ -20,8 +20,8 @@ watch(
   () => props.student,
   (s) => {
     if (s) {
-      form.ime = s.IME;
-      form.prezime = s.PREZIME;
+      form.ime = s.ime;
+      form.prezime = s.prezime;
     }
   },
   { immediate: true }
@@ -34,9 +34,9 @@ async function save() {
   }
 
   try {
-    await StudentAPI.update(props.student.ID_STUDENTA, {
-      IME: form.ime,
-      PREZIME: form.prezime
+    await StudentAPI.update(props.student.idStudenta, {
+      ime: form.ime,
+      prezime: form.prezime
     });
 
     notifySuccess("Podaci uspešno izmenjeni");

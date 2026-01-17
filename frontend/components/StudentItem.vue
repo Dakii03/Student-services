@@ -13,9 +13,10 @@ defineEmits(["select"]);
     :class="{ active: selected }"
     @click="$emit('select', student)"
   >
-    <strong>{{ student.IME }} {{ student.PREZIME }}</strong>
+    <strong>{{ student.ime }} {{ student.prezime }}</strong>
     <div class="index">
-      {{ student.SMER }}-{{ student.BROJ }}/{{ student.GODINA_UPISA.slice(-2) }}
+
+      {{ student.smer }}-{{ student.broj }}/{{ student.godinaUpisa.slice(-2) }}
     </div>
   </div>
 </template>

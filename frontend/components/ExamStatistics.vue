@@ -32,8 +32,6 @@ onMounted(async () => {
   rokovi.value = rRes.data;
   zapisnici.value = zRes.data;
   studenti.value = sRes.data;
-
-  console.log("STUDENTI:", studenti.value);
 });
 
 const izborNapravljen = computed(() => {
@@ -44,44 +42,43 @@ const ispitNePostoji = computed(() => {
   return izborNapravljen.value && !selectedIspit.value;
 });
 
-
 const indeksStudenta = (idStudenta) => {
   const s = studenti.value.find(
-    st => Number(st.ID_STUDENTA) === Number(idStudenta)
+    st => Number(st.idStudenta) === Number(idStudenta)
   );
 
   if (!s) return "—";
 
-  return `${s.SMER}-${s.BROJ}/${s.GODINA_UPISA.slice(-2)}`;
+  return `${s.smer}-${s.broj}/${s.godinaUpisa.slice(-2)}`;
 };
 
-// IZABRANI ISPIT (zapisnik)
+// IZABRANI ISPIT
 const selectedIspit = computed(() => {
   if (!selectedPredmet.value || !selectedRok.value) return null;
   zapisnikIzabran();
 
   return ispiti.value.find(
     i =>
-      Number(i.ID_PREDMETA) === Number(selectedPredmet.value) &&
-      Number(i.ID_ROKA) === Number(selectedRok.value)
+      Number(i.idPredmeta) === Number(selectedPredmet.value) &&
+      Number(i.idRoka) === Number(selectedRok.value)
   );
 });
 
-// CEO ZAPISNIK ZA IZABRANI ISPIT
+// CEO ZAPISNIK
 const zapisnik = computed(() => {
   if (!selectedIspit.value) return [];
 
   return zapisnici.value.filter(
-    z => Number(z.ID_ISPITA) === Number(selectedIspit.value.ID_ISPITA)
+    z => Number(z.idIspita) === Number(selectedIspit.value.idIspita)
   );
 });
 
-// STATISTIKA OCENA
+// STATISTIKA
 const statistika = computed(() => {
   const stats = { 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
 
   zapisnik.value.forEach(z => {
-    const ocena = Number(z.OCENA);
+    const ocena = Number(z.ocena);
     if (stats[ocena] !== undefined) {
       stats[ocena]++;
     }
@@ -95,37 +92,38 @@ const statistika = computed(() => {
   <div class="exam-stat">
     <h3>Zapisnik ispita</h3>
 
+    <!-- FILTERS -->
     <div class="filters">
-      <div>
-        <label>Predmet: </label>
+      <div class="field">
+        <label>Predmet</label>
         <select v-model="selectedPredmet">
           <option :value="null">-- izaberite --</option>
           <option
             v-for="p in predmeti"
-            :key="p.ID_PREDMETA"
-            :value="p.ID_PREDMETA"
+            :key="p.idPredmeta"
+            :value="p.idPredmeta"
           >
-            {{ p.NAZIV }}
+            {{ p.naziv }}
           </option>
         </select>
       </div>
-      <br/>
-      <div>
-        <label>Ispitni rok: </label>
+
+      <div class="field">
+        <label>Ispitni rok</label>
         <select v-model="selectedRok">
           <option :value="null">-- izaberite --</option>
           <option
             v-for="r in rokovi"
-            :key="r.ID_ROKA"
-            :value="r.ID_ROKA"
+            :key="r.idRoka"
+            :value="r.idRoka"
           >
-            {{ r.NAZIV }} – {{ r.SKOLSKA_GOD }}
-
+            {{ r.naziv }} – {{ r.skolskaGod }}
           </option>
         </select>
       </div>
     </div>
 
+    <!-- TABLE -->
     <table v-if="zapisnik.length">
       <thead>
         <tr>
@@ -136,15 +134,15 @@ const statistika = computed(() => {
       <tbody>
         <tr
           v-for="z in zapisnik"
-          :key="z.ID_STUDENTA + '-' + z.ID_ISPITA"
+          :key="z.idStudenta + '-' + z.idIspita"
         >
-          <td>{{ indeksStudenta(z.ID_STUDENTA) }}</td>
-          <td>{{ z.OCENA }}</td>
+          <td>{{ indeksStudenta(z.idStudenta) }}</td>
+          <td class="grade">{{ z.ocena }}</td>
         </tr>
       </tbody>
     </table>
 
-
+    <!-- EMPTY STATES -->
     <p v-if="!izborNapravljen" class="empty">
       Izaberite predmet i ispitni rok.
     </p>
@@ -152,13 +150,14 @@ const statistika = computed(() => {
     <p v-else-if="ispitNePostoji" class="empty">
       Za izabrani ispitni rok nije bilo polaganja ispita iz izabranog predmeta.
     </p>
-     
+
+    <!-- STATS -->
     <div v-if="zapisnik.length" class="stats">
       <h4>Statistika ocena</h4>
       <ul>
         <li v-for="(v, k) in statistika" :key="k">
-          Ocena {{ k }}: <span v-if="v" style="color: red;">{{ v }}</span>
-          <span v-else>{{ v }}</span>
+          Ocena {{ k }}:
+          <span :class="{ highlight: v > 0 }">{{ v }}</span>
         </li>
       </ul>
     </div>
@@ -166,18 +165,95 @@ const statistika = computed(() => {
 </template>
 
 <style scoped>
-  table {
+.exam-stat {
+  padding: 20px;
+  width: 100%;
+}
+
+h3 {
+  margin-bottom: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+/* FILTERS */
+.filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+select {
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+}
+
+/* TABLE */
+table {
   width: 100%;
   border-collapse: collapse;
-  }
+  margin-top: 10px;
+}
 
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 6px;
-  }
+th,
+td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: left;
+}
 
-  th {
-    background: #f1f5f9;
-  }
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+.grade {
+  font-weight: 500;
+}
+
+/* EMPTY */
+.empty {
+  margin-top: 20px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* STATS */
+.stats {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.stats h4 {
+  margin-bottom: 8px;
+}
+
+.stats ul {
+  list-style: none;
+  padding: 0;
+}
+
+.stats li {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.highlight {
+  font-weight: 600;
+  color: #ef4444;
+}
 </style>

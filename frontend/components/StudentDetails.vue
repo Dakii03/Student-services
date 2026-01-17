@@ -16,11 +16,11 @@ const emit = defineEmits(["refresh"]);
     <h2>Detalji studenta</h2>
 
     <div>
-      <p><strong>Ime:</strong> {{ student.IME }}</p>
-      <p><strong>Prezime:</strong> {{ student.PREZIME }}</p>
+      <p><strong>Ime:</strong> {{ student.ime }}</p>
+      <p><strong>Prezime:</strong> {{ student.prezime }}</p>
       <p>
         <strong>Broj indeksa:</strong>
-        {{ student.SMER }}-{{ student.BROJ }}/{{ student.GODINA_UPISA.slice(-2) }}
+        {{ student.smer }}-{{ student.broj }}/{{ student.godinaUpisa.slice(-2) }}
       </p>
     </div>
 
@@ -28,7 +28,7 @@ const emit = defineEmits(["refresh"]);
       :student="student"
       @updated="emit('refresh')"
     />
-    <PassedExams :studentId="student.ID_STUDENTA" />
+    <PassedExams :studentId="student.idStudenta" />
     
   </div>
 
@@ -36,7 +36,6 @@ const emit = defineEmits(["refresh"]);
     Izaberite studenta iz liste.
     
   </div>
-  <ExamStatistics />
 </template>
 
 <style scoped>

@@ -34,9 +34,9 @@ defineExpose({
     <div class="students-grid">
       <StudentItem
         v-for="s in students"
-        :key="s.ID_STUDENTA"
+        :key="s.idStudenta"
         :student="s"
-        :selected="selectedStudent?.ID_STUDENTA === s.ID_STUDENTA"
+        :selected="selectedStudent?.idStudenta === s.idStudenta"
         @select="selectStudent"
       />
     </div>

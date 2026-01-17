@@ -36,7 +36,7 @@ async function loadData() {
   ]);
 
   zapisnici.value = zRes.data.filter(
-    z => Number(z.ID_STUDENTA) === Number(props.studentId)
+    z => Number(z.idStudenta) === Number(props.studentId)
   );
 
   ispiti.value = iRes.data;
@@ -49,23 +49,23 @@ watch(() => props.studentId, loadData, { immediate: true });
 
 
 function getIspit(idIspita) {
-  return ispiti.value.find(i => i.ID_ISPITA === idIspita);
+  return ispiti.value.find(i => i.idIspita === idIspita);
 }
 
 function predmetNaziv(idPredmeta) {
-  return predmeti.value.find(p => p.ID_PREDMETA === idPredmeta)?.NAZIV || "—";
+  return predmeti.value.find(p => p.idPredmeta === idPredmeta)?.naziv || "—";
 }
 
 function rokNaziv(idRoka) {
-  return rokovi.value.find(r => r.ID_ROKA === idRoka)?.NAZIV || "—";
+  return rokovi.value.find(r => r.idRoka === idRoka)?.naziv || "—";
 }
 
 function skolskaGodina(idPredmeta) {
   return studentPredmeti.value.find(
     sp =>
-      sp.ID_STUDENTA === props.studentId &&
-      sp.ID_PREDMETA === idPredmeta
-  )?.SKOLSKA_GODINA || "—";
+      sp.idStudenta === props.studentId &&
+      sp.idPredmeta === idPredmeta
+  )?.skolskaGodina || "—";
 }
 
 const prosek = computed(() => {
@@ -74,12 +74,11 @@ const prosek = computed(() => {
   const polozeniPoPredmetu = {};
 
   zapisnici.value.forEach(z => {
-    const ispit = getIspit(z.ID_ISPITA);
+    const ispit = getIspit(z.idIspita);
     if (!ispit) return;
 
-    const idPredmeta = ispit.ID_PREDMETA;
-    const ocena = Number(z.OCENA);
-
+    const idPredmeta = ispit.idPredmeta;
+    const ocena = Number(z.ocena);
     if (ocena >= 6 ) {
       polozeniPoPredmetu[idPredmeta] = ocena;
     }
@@ -98,14 +97,14 @@ function uspesnost(idPredmeta) {
   if (!idPredmeta) return "—";
 
   const pokusaji = zapisnici.value.filter(z => {
-    const ispit = getIspit(z.ID_ISPITA);
-    return ispit && ispit.ID_PREDMETA === idPredmeta;
+    const ispit = getIspit(z.idIspita);
+    return ispit && ispit.idPredmeta === idPredmeta;
   });
 
   if (!pokusaji.length) return "—";
 
   const neuspesni = pokusaji.filter(
-    z => Number(z.OCENA) < 6
+    z => Number(z.ocena) < 6
   ).length;
 
   // ako je polozio iz prvog puta
@@ -135,20 +134,20 @@ function uspesnost(idPredmeta) {
       <tbody>
         <tr
           v-for="z in zapisnici"
-          :key="z.ID_STUDENTA + '-' + z.ID_ISPITA"
+          :key="z.idStudenta + '-' + z.idIspita"
         >
           <td>
-            {{ predmetNaziv(getIspit(z.ID_ISPITA)?.ID_PREDMETA) }}
+            {{ predmetNaziv(getIspit(z.idIspita)?.idPredmeta) }}
           </td>
-          <td>{{ z.OCENA }}</td>
+          <td>{{ z.ocena }}</td>
           <td>
-            {{ rokNaziv(getIspit(z.ID_ISPITA)?.ID_ROKA) }}
-          </td>
-          <td>
-            {{ skolskaGodina(getIspit(z.ID_ISPITA)?.ID_PREDMETA) }}
+            {{ rokNaziv(getIspit(z.idIspita)?.idRoka) }}
           </td>
           <td>
-            {{ uspesnost(getIspit(z.ID_ISPITA)?.ID_PREDMETA) }}
+            {{ skolskaGodina(getIspit(z.idIspita)?.idPredmeta) }}
+          </td>
+          <td>
+            {{ uspesnost(getIspit(z.idIspita)?.idPredmeta) }}
           </td>
         </tr>
       </tbody>
