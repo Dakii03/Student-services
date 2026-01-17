@@ -1,22 +1,31 @@
 # Student Exam Management System
 
-A web application for managing students, subjects, exam periods, exam records, and statistics.  
-The system allows viewing student data, tracking exam attempts, calculating statistics, and analyzing student performance.
+A web application for managing students, professors, subjects, exam periods, exams, exam registrations, and exam records.
+The system enables student exam registration, professor grading, and statistical analysis of exam results.
 
-This project was developed as a university assignment using **Vue 3**, **Express.js**, and **SQLite**.
+This project was developed as a university assignment using Vue 3 and ASP.NET Core Web API with Entity Framework Core and SQL Server.
 
 ---
 
 ## Features
 
-- Student list with selection and editing
-- Subject and exam period selection
-- Exam records (zapisnik) per subject and exam period
-- Exam statistics (grade distribution)
-- Student index formatting (study program, number, enrollment year)
-- Calculation of passed exams and average grade
-- REST API backend
+- Student management (view, edit, delete)
+- Professor management
+- Subject management with assigned professors
+- Exam periods (opening and closing of exam sessions)
+- Exam creation per subject and exam period
+- Student exam registration
+- Exam records (zapisnik) with grades and points
+- Exam statistics and grade distribution
+- Calculation of passed exams and average grades
+- RESTful API backend
 - Clean and reactive frontend using Vue 3 Composition API
+
+---
+
+## Project Structure
+
+ /frontend → Vue 3 application /backend → ASP.NET Core Web API 
 
 ---
 
@@ -30,9 +39,27 @@ This project was developed as a university assignment using **Vue 3**, **Express
 - HTML / CSS
 
 ### Backend
-- Node.js
-- Express.js
-- SQLite3
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- C#
+- LINQ
+
+---
+
+## Database
+
+The application uses a SQL Server database named STUDENTSKA with the following main tables:
+
+- student
+- profesor
+- predmet
+- ispitni_rok
+- ispit
+- student_predmet
+- zapisnik
+
+The database schema follows relational design principles and avoids data redundancy.
 
 ---
 
@@ -40,54 +67,47 @@ This project was developed as a university assignment using **Vue 3**, **Express
 
 ### Backend
 
-cd backend
-npm install
-node api.js
+1. Open the backend project in Visual Studio
+2. Make sure SQL Server is running and the STUDENTSKA database exists
+3. Update the connection string in appsettings.json if necessary
+4. Run the project
 
 The backend runs on:
 
-http://localhost:5000
+ https://localhost:7043 
+
+---
 
 ### Frontend
 
-cd frontend
-npm install
-npm run dev
+bash cd frontend 
+npm install 
+npm run dev 
 
 The frontend runs on:
 
-http://localhost:5173
+ http://localhost:5173 
 
-### API Usage
+---
 
-The frontend communicates with the backend using REST endpoints such as:
+## API Endpoints (Examples)
 
-GET /api/Students
+ GET /api/Students GET /api/Students/{id} POST /api/Students PUT /api/Students/{id} DELETE /api/Students/{id}  GET /api/Profesors GET /api/Predmets GET /api/IspitniRoks GET /api/Ispits GET /api/Zapisniks 
 
-PUT /api/Students/:id
+---
 
-GET /api/Predmets
+## Notes
 
-GET /api/IspitniRoks
+- The project is intended for educational and academic use
 
-GET /api/Ispits
+---
 
-GET /api/Zapisniks
-
-### Notes
-
-Exam periods may share the same name but differ by academic year.
-
-When no exams exist for a selected subject and exam period, a descriptive message is shown.
-
-Statistics are calculated only for relevant exam records.
-
-The application is designed for educational purposes.
-
-### Author
+## Author
 
 Damjan Jovanović
 
-License
+---
+
+## License
 
 This project is intended for educational use only.
